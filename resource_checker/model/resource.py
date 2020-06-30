@@ -5,8 +5,8 @@ from typing import Any
 import requests
 from requests import Response
 
-from model.exceptions import CheckResourceError, RetrieveResourceError
-from model.rules import Rule
+from resource_checker.model.exceptions import CheckResourceError, RetrieveResourceError
+from resource_checker.model.rules import Rule
 
 
 class Resource(ABC):
