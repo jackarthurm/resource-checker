@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import logging
-from typing import Any
+from typing import Any, Optional
 
 import requests
 from requests import Response
@@ -11,9 +11,30 @@ from resource_checker.model.rules import Rule
 
 class Resource(ABC):
 
-    def __init__(self, location: str, rule: Rule) -> None:
+    def __init__(
+        self,
+        name: str,
+        location: str,
+        rule: Rule,
+        description: Optional[str] = None
+    ) -> None:
+
+        self._name: str = name
+        self._description: str = description
         self._location: str = location
         self._rule: Rule = rule
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @property
+    def location(self) -> str:
+        return self._location
 
     @abstractmethod
     def retrieve_content(self) -> Any:
@@ -45,9 +66,6 @@ class TextResource(Resource):
 
 class HTMLWebResource(TextResource):
 
-    def __init__(self, url: str, rule: Rule) -> None:
-        super(HTMLWebResource, self).__init__(url, rule)
-
     def retrieve_content(self) -> str:
         response: Response = requests.get(
             self._location,
@@ -60,9 +78,6 @@ class HTMLWebResource(TextResource):
 
 
 class JSONWebResource(TextResource):
-
-    def __init__(self, url: str, rule: Rule) -> None:
-        super(JSONWebResource, self).__init__(url, rule)
 
     def retrieve_content(self) -> str:
         response: Response = requests.get(
